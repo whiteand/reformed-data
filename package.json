@@ -1,6 +1,6 @@
 {
   "name": "reformed-data",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "package with functions for declarative data structure transformations",
   "main": "index.js",
   "scripts": {
