@@ -88,7 +88,7 @@ const pipeValuesByStructure = R.curry((inStructure, outStructure, obj) => {
   const input = getValuesByStructure(inStructure, obj)
   const pathsWithPlaceholders = getPlaceholdersWithPaths(outStructure)
   const functionPlaceholderToObj = ({ path: p, placeholder }, resObj) => {
-    const value = placeholder(input)
+    const value = placeholder(input, obj)
     return setByPath(p, value, resObj)
   }
   const propValuePlaceholderToObj = ({ path: p, placeholder }, resObj) => {
