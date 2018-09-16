@@ -196,5 +196,9 @@ const outStruct1 = {
 }
 console.log(pipeValuesByStructure(inStruct1, outStruct1, { a: 1, b: 2 }))
 // OUTPUT: { sum: 3 }
-
+console.log(pipeValuesByStructure('arr', {
+  max: ({ arr }) => Math.max(...arr),
+  min: ({ arr }) => Math.min(...arr)
+}, [1,2,3,4,5]))
+// OUTPUT: { max: 5, min: 1 }
 ```
