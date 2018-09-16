@@ -1,0 +1,19 @@
+{
+  "name": "reformed-data",
+  "version": "1.0.0",
+  "description": "package with functions for declarative data structure transformations",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "ramda",
+    "functional programming",
+    "data flow"
+  ],
+  "author": "Andrew Beletskiy",
+  "license": "ISC",
+  "dependencies": {
+    "ramda": "^0.25.0"
+  }
+}
