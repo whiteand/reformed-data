@@ -9,7 +9,10 @@ const getPlaceholdersWithPaths = (obj, isPlaceholder = defaultIsPlaceholder) => 
       case objHistory.includes(obj):
         return []
       case isPlaceholder(obj):
-        return [{ path: [], placeholder: obj }]
+        return [{
+          path: [],
+          placeholder: obj
+        }]
       case typeof obj !== 'object':
         return []
       default:
@@ -18,39 +21,51 @@ const getPlaceholdersWithPaths = (obj, isPlaceholder = defaultIsPlaceholder) => 
             value,
             [...objHistory, obj]
           )
-          return subPathPlaceholders.map(({ path, placeholder }) => ({
+          return subPathPlaceholders.map(({
+            path,
+            placeholder
+          }) => ({
             path: [propName, ...path],
             placeholder
           }))
-     }
+        }
         const placeholdersWithPathArrs = Object.entries(obj)
-           .map(entryToPlaceholdersArr)
+          .map(entryToPlaceholdersArr)
         return R.flatten(placeholdersWithPathArrs)
     }
   }
-  
+
   const res = _getPlaceholdersWithPaths(obj, [])
   return res
 }
 
 const getValuesByStructure = R.curry((structure, obj) => {
-  const numberPlaceholderToObj = (({ path: p, placeholder }) => {
+  const numberPlaceholderToObj = (({
+    path: p,
+    placeholder
+  }) => {
     const value = R.path(p, obj)
-    const res =  []
+    const res = []
     res[placeholder] = value
     return res
   })
-  const stringPlaceholderToObj = (({ path: p, placeholder }) => {
+  const stringPlaceholderToObj = (({
+    path: p,
+    placeholder
+  }) => {
     const value = R.path(p, obj)
     return R.objOf(placeholder, value)
   })
-  const functionPlaceholderToObj = (({ path: p, placeholder }) => {
+  const functionPlaceholderToObj = (({
+    path: p,
+    placeholder
+  }) => {
     const value = R.path(p, obj)
     const resObj = placeholder(value, p, obj)
-    const lastPathName = R.pathOr('', [p.length-1], p)
-    return typeof resObj === 'object'
-      ? resObj
-      : R.objOf(lastPathName, resObj)
+    const lastPathName = R.pathOr('', [p.length - 1], p)
+    return typeof resObj === 'object' ?
+      resObj :
+      R.objOf(lastPathName, resObj)
   })
   const placeholders = getPlaceholdersWithPaths(structure)
   const resObjects = placeholders.map((placeholderWithPath) => {
@@ -65,9 +80,7 @@ const getValuesByStructure = R.curry((structure, obj) => {
         return {}
     }
   })
-  const initialValue = resObjects.some(Array.isArray)
-    ? []
-    : {}
+  const initialValue = resObjects.some(Array.isArray) ? [] : {}
   const res = resObjects.reduce((resObjOrArr, obj) => {
     R.forEachObjIndexed((value, propName) => {
       resObjOrArr[propName] = value
@@ -87,11 +100,17 @@ const pipeValuesByStructure = R.curry((inStructure, outStructure, obj) => {
   }
   const input = getValuesByStructure(inStructure, obj)
   const pathsWithPlaceholders = getPlaceholdersWithPaths(outStructure)
-  const functionPlaceholderToObj = ({ path: p, placeholder }, resObj) => {
+  const functionPlaceholderToObj = ({
+    path: p,
+    placeholder
+  }, resObj) => {
     const value = placeholder(input, obj)
     return setByPath(p, value, resObj)
   }
-  const propValuePlaceholderToObj = ({ path: p, placeholder }, resObj) => {
+  const propValuePlaceholderToObj = ({
+    path: p,
+    placeholder
+  }, resObj) => {
     const value = input[placeholder]
     return setByPath(p, value, resObj)
   }
@@ -109,8 +128,15 @@ const pipeValuesByStructure = R.curry((inStructure, outStructure, obj) => {
   return res
 })
 
+const named = R.curry((f, propName) => function (...args) {
+  return {
+    [propName]: f.apply(this, args)
+  }
+})
+
 module.exports = {
- getPlaceholdersWithPaths,
- getValuesByStructure,
- pipeValuesByStructure
+  getPlaceholdersWithPaths,
+  getValuesByStructure,
+  pipeValuesByStructure,
+  named
 }
