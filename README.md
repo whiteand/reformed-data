@@ -1,4 +1,7 @@
 # reformed-data
+
+[![Greenkeeper badge](https://badges.greenkeeper.io/whiteand/reformed-data.svg)](https://greenkeeper.io/)
+
 npm package with functions that can be used for declarative data transformations
 
 # Goal
